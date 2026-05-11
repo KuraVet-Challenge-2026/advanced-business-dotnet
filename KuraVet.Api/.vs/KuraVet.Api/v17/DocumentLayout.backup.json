@@ -1,0 +1,278 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\migrations\\kuravetdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\migrations\\kuravetdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\migrations\\20260506012009_adicionaeventoconsulta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\migrations\\20260506012009_adicionaeventoconsulta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\controllers\\eventoconsultacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\controllers\\eventoconsultacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\data\\kuravetdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\data\\kuravetdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\models\\eventoconsulta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\models\\eventoconsulta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\kuravet.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\kuravet.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\controllers\\checkincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\controllers\\checkincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\models\\checkinhistorico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\models\\checkinhistorico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\models\\pet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\models\\pet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\labsfiap\\.NuGet\\packages\\oracle.entityframeworkcore\\8.21.121\\readme.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|c:\\users\\labsfiap\\desktop\\advanced-dotnet\\kuravet.api\\kuravet.api\\migrations\\20260506005652_criacaotabelaskuravet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F33B7D80-3CFE-4687-AFC4-09ADDD8FD61C}|KuraVet.Api\\KuraVet.Api.csproj|solutionrelative:kuravet.api\\migrations\\20260506005652_criacaotabelaskuravet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "KuraVetDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\KuraVetDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Migrations\\KuraVetDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\KuraVetDbContextModelSnapshot.cs",
+              "RelativeToolTip": "KuraVet.Api\\Migrations\\KuraVetDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T21:11:16.489Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PetController.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\PetController.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Controllers\\PetController.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\PetController.cs",
+              "RelativeToolTip": "KuraVet.Api\\Controllers\\PetController.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAcwCgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:19:07.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TutorController.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\TutorController.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Controllers\\TutorController.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\TutorController.cs",
+              "RelativeToolTip": "KuraVet.Api\\Controllers\\TutorController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:18:47.76Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "KuraVet.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\appsettings.json",
+              "RelativeToolTip": "KuraVet.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-06T00:36:38.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EventoConsultaController.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\EventoConsultaController.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Controllers\\EventoConsultaController.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\EventoConsultaController.cs",
+              "RelativeToolTip": "KuraVet.Api\\Controllers\\EventoConsultaController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAcwCsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:19:30.062Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20260506012009_AdicionaEventoConsulta.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\20260506012009_AdicionaEventoConsulta.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Migrations\\20260506012009_AdicionaEventoConsulta.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\20260506012009_AdicionaEventoConsulta.cs",
+              "RelativeToolTip": "KuraVet.Api\\Migrations\\20260506012009_AdicionaEventoConsulta.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:20:09.854Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "EventoConsulta.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\EventoConsulta.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Models\\EventoConsulta.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\EventoConsulta.cs",
+              "RelativeToolTip": "KuraVet.Api\\Models\\EventoConsulta.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAcwCEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:17:52.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CheckinHistorico.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\CheckinHistorico.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Models\\CheckinHistorico.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\CheckinHistorico.cs",
+              "RelativeToolTip": "KuraVet.Api\\Models\\CheckinHistorico.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAYwCcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:49:40.237Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Pet.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\Pet.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Models\\Pet.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\Pet.cs",
+              "RelativeToolTip": "KuraVet.Api\\Models\\Pet.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAADwvxoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:46:18.695Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "KuraVet.Api.csproj",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+              "RelativeDocumentMoniker": "KuraVet.Api\\KuraVet.Api.csproj",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+              "RelativeToolTip": "KuraVet.Api\\KuraVet.Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-06T00:43:25.532Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Program.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Program.cs",
+              "RelativeToolTip": "KuraVet.Api\\Program.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAYwBIAAABcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:42:35.468Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Tutor.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\Tutor.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Models\\Tutor.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Models\\Tutor.cs",
+              "RelativeToolTip": "KuraVet.Api\\Models\\Tutor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:45:49.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CheckinController.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\CheckinController.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Controllers\\CheckinController.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Controllers\\CheckinController.cs",
+              "RelativeToolTip": "KuraVet.Api\\Controllers\\CheckinController.cs",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAkwJcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:41:37.066Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "20260506005652_CriacaoTabelasKuraVet.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\20260506005652_CriacaoTabelasKuraVet.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Migrations\\20260506005652_CriacaoTabelasKuraVet.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Migrations\\20260506005652_CriacaoTabelasKuraVet.cs",
+              "RelativeToolTip": "KuraVet.Api\\Migrations\\20260506005652_CriacaoTabelasKuraVet.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:56:53.031Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "KuraVetDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Data\\KuraVetDbContext.cs",
+              "RelativeDocumentMoniker": "KuraVet.Api\\Data\\KuraVetDbContext.cs",
+              "ToolTip": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\Data\\KuraVetDbContext.cs",
+              "RelativeToolTip": "KuraVet.Api\\Data\\KuraVetDbContext.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T00:50:20.855Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "readme.txt",
+              "DocumentMoniker": "C:\\Users\\labsfiap\\.NuGet\\packages\\oracle.entityframeworkcore\\8.21.121\\readme.txt",
+              "RelativeDocumentMoniker": "..\\..\\..\\.NuGet\\packages\\oracle.entityframeworkcore\\8.21.121\\readme.txt",
+              "ToolTip": "C:\\Users\\labsfiap\\.NuGet\\packages\\oracle.entityframeworkcore\\8.21.121\\readme.txt",
+              "RelativeToolTip": "..\\..\\..\\.NuGet\\packages\\oracle.entityframeworkcore\\8.21.121\\readme.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-05-06T00:52:27.1Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

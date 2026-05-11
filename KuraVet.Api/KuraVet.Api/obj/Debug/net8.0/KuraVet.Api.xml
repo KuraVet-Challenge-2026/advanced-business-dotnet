@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KuraVet.Api</name>
+    </assembly>
+    <members>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.RegistrarCheckin(KuraVet.Api.Models.CheckinHistorico)">
+             <summary>
+             Registra um novo Check-in de saúde física para um Pet.
+             </summary>
+             <remarks>
+             Exemplo de requisição:
+            
+                 POST /api/Checkin
+                 {
+                    "frequenciaRespiratoria": 25,
+                    "tempoPreenchimentoCapilar": 1,
+                    "corMucosa": "Rosada",
+                    "nivelHidratacao": "Normal",
+                    "petId": 1
+                 }
+            
+             </remarks>
+             <response code="201">Check-in registrado com sucesso.</response>
+             <response code="400">Se os dados enviados forem inválidos ou incompletos.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorId(System.Int32)">
+            <summary>
+            Busca um Check-in específico pelo seu ID.
+            </summary>
+            <param name="id">O ID do Check-in no banco de dados.</param>
+            <response code="200">Retorna os dados do Check-in solicitado.</response>
+            <response code="404">Se o Check-in não for encontrado.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorPet(System.Int32)">
+            <summary>
+            Lista o histórico completo de Check-ins de um Pet específico.
+            </summary>
+            <param name="petId">O ID do Pet (ex: 1).</param>
+            <response code="200">Retorna a lista de check-ins ordenados por data.</response>
+            <response code="404">Se o Pet não possuir nenhum histórico.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorRisco(System.String)">
+            <summary>
+            Filtra os Check-ins baseados no nível de Risco definido pela IA.
+            </summary>
+            <param name="nivelRisco">O nível de risco (ex: Baixo, Moderado, Grave).</param>
+            <response code="200">Retorna os alertas correspondentes ao nível de risco.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.AtualizarCheckin(System.Int32,KuraVet.Api.Models.CheckinHistorico)">
+            <summary>
+            Atualiza os dados de um Check-in existente.
+            </summary>
+            <param name="id">ID do Check-in a ser atualizado.</param>
+            <param name="checkinAtualizado">O JSON contendo os novos dados do check-in.</param>
+            <response code="204">Check-in atualizado com sucesso.</response>
+            <response code="400">Se o ID da URL for diferente do ID no corpo da requisição.</response>
+            <response code="404">Se o Check-in não existir.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.CheckinController.DeletarCheckin(System.Int32)">
+            <summary>
+            Deleta permanentemente um Check-in do histórico do Pet.
+            </summary>
+            <param name="id">ID do Check-in a ser deletado.</param>
+            <response code="204">Remoção concluída com sucesso.</response>
+            <response code="404">Se o Check-in não for encontrado.</response>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.Criar(KuraVet.Api.Models.EventoConsulta)">
+            <summary>Registra um novo Evento Clínico (Ex: Vacina, Retorno, Exame).</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.BuscarPorId(System.Int32)">
+            <summary>Busca os detalhes de um Evento Clínico.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.LinhaDoTempoPet(System.Int32)">
+            <summary>Busca a Linha do Tempo Clínica completa de um Pet.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.PetController.Criar(KuraVet.Api.Models.Pet)">
+            <summary>Cadastra um novo Pet vinculando-o a um Tutor.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.PetController.BuscarPorId(System.Int32)">
+            <summary>Busca o perfil completo de um Pet.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.PetController.BuscarPorTutor(System.Int32)">
+            <summary>Lista todos os Pets de um Tutor específico.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.TutorController.Criar(KuraVet.Api.Models.Tutor)">
+            <summary>Cadastra um novo Tutor no sistema KuraVet.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.TutorController.ListarTodos">
+            <summary>Lista todos os Tutores cadastrados.</summary>
+        </member>
+        <member name="M:KuraVet.Api.Controllers.TutorController.BuscarPorId(System.Int32)">
+            <summary>Busca um Tutor específico pelo ID.</summary>
+        </member>
+        <member name="T:KuraVet.Api.Migrations.CriacaoTabelasKuraVet">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.CriacaoTabelasKuraVet.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.CriacaoTabelasKuraVet.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.CriacaoTabelasKuraVet.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:KuraVet.Api.Migrations.AdicionaEventoConsulta">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.AdicionaEventoConsulta.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.AdicionaEventoConsulta.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:KuraVet.Api.Migrations.AdicionaEventoConsulta.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
