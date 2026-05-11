@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\KuraVet.Api",
+    "\\KuraVet.Api\\KuraVet.Api",
+    "\\KuraVet.Api\\KuraVet.Api\\Controllers",
+    "\\KuraVet.Api\\KuraVet.Api\\Data",
+    "\\KuraVet.Api\\KuraVet.Api\\Migrations",
+    "\\KuraVet.Api\\KuraVet.Api\\Models",
+    "\\KuraVet.Api\\KuraVet.Api\\obj"
+  ],
+  "SelectedNode": "\\KuraVet.Api\\KuraVet.Api\\appsettings.json",
+  "PreviewInSolutionExplorer": false
+}

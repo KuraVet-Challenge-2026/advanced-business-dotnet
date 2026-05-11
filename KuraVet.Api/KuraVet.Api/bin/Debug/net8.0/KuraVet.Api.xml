@@ -65,33 +65,6 @@
             <response code="204">Remoção concluída com sucesso.</response>
             <response code="404">Se o Check-in não for encontrado.</response>
         </member>
-        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.Criar(KuraVet.Api.Models.EventoConsulta)">
-            <summary>Registra um novo Evento Clínico (Ex: Vacina, Retorno, Exame).</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.BuscarPorId(System.Int32)">
-            <summary>Busca os detalhes de um Evento Clínico.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.EventoConsultaController.LinhaDoTempoPet(System.Int32)">
-            <summary>Busca a Linha do Tempo Clínica completa de um Pet.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.PetController.Criar(KuraVet.Api.Models.Pet)">
-            <summary>Cadastra um novo Pet vinculando-o a um Tutor.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.PetController.BuscarPorId(System.Int32)">
-            <summary>Busca o perfil completo de um Pet.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.PetController.BuscarPorTutor(System.Int32)">
-            <summary>Lista todos os Pets de um Tutor específico.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.TutorController.Criar(KuraVet.Api.Models.Tutor)">
-            <summary>Cadastra um novo Tutor no sistema KuraVet.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.TutorController.ListarTodos">
-            <summary>Lista todos os Tutores cadastrados.</summary>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.TutorController.BuscarPorId(System.Int32)">
-            <summary>Busca um Tutor específico pelo ID.</summary>
-        </member>
         <member name="T:KuraVet.Api.Migrations.CriacaoTabelasKuraVet">
             <inheritdoc />
         </member>

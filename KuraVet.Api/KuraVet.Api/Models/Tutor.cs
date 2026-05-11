@@ -15,7 +15,7 @@ namespace KuraVet.Api.Models
         [MaxLength(100)]
         public string Nome { get; set; } = string.Empty;
 
-        [JsonIgnore] // Esconde essa lista no Swagger para não bugar o JSON
+        [JsonIgnore] 
         public ICollection<Pet>? Pets { get; set; }
     }
 }

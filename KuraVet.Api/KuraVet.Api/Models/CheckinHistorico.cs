@@ -34,7 +34,7 @@ namespace KuraVet.Api.Models
         [Required]
         public int PetId { get; set; }
 
-        [JsonIgnore] // O pulo do gato para o Swagger ficar limpo!
+        [JsonIgnore] 
         public Pet? Pet { get; set; }
     }
 }

@@ -240,11 +240,24 @@
       }
     },
     "/api/EventoConsulta": {
+      "get": {
+        "tags": [
+          "EventoConsulta"
+        ],
+        "summary": "Lista todos os eventos clínicos",
+        "description": "Retorna todos os eventos clínicos cadastrados no banco.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
           "EventoConsulta"
         ],
-        "summary": "Registra um novo Evento Clínico (Ex: Vacina, Retorno, Exame).",
+        "summary": "Adicionar novo evento",
+        "description": "Registra um novo Evento Clínico (Ex: Vacina, Retorno, Exame, Cirurgia).",
         "requestBody": {
           "content": {
             "application/json": {
@@ -276,7 +289,73 @@
         "tags": [
           "EventoConsulta"
         ],
-        "summary": "Busca os detalhes de um Evento Clínico.",
+        "summary": "Obter evento por ID",
+        "description": "Busca os detalhes de um Evento Clínico específico.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "EventoConsulta"
+        ],
+        "summary": "Editar evento existente",
+        "description": "Atualiza as informações de um evento clínico já registrado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventoConsulta"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventoConsulta"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventoConsulta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "EventoConsulta"
+        ],
+        "summary": "Deletar um evento",
+        "description": "Remove permanentemente um evento clínico do sistema.",
         "parameters": [
           {
             "name": "id",
@@ -300,7 +379,8 @@
         "tags": [
           "EventoConsulta"
         ],
-        "summary": "Busca a Linha do Tempo Clínica completa de um Pet.",
+        "summary": "Obter linha do tempo clínica do Pet",
+        "description": "Busca todos os eventos clínicos atrelados a um Pet, ordenados por data.",
         "parameters": [
           {
             "name": "petId",
@@ -320,11 +400,24 @@
       }
     },
     "/api/Pet": {
+      "get": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Lista todos os pets",
+        "description": "Retorna todos os pets cadastrados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Pet"
         ],
-        "summary": "Cadastra um novo Pet vinculando-o a um Tutor.",
+        "summary": "Adicionar novo pet",
+        "description": "Cadastra um novo Pet vinculando-o a um Tutor.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -356,7 +449,73 @@
         "tags": [
           "Pet"
         ],
-        "summary": "Busca o perfil completo de um Pet.",
+        "summary": "Obter pet por ID",
+        "description": "Busca um perfil completo de um pet pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Editar pet existente",
+        "description": "Atualiza os dados de um pet já cadastrado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pet"
+        ],
+        "summary": "Deletar um pet",
+        "description": "Remove um pet do banco de dados.",
         "parameters": [
           {
             "name": "id",
@@ -380,7 +539,8 @@
         "tags": [
           "Pet"
         ],
-        "summary": "Lista todos os Pets de um Tutor específico.",
+        "summary": "Obter pets por Tutor",
+        "description": "Lista todos os Pets vinculados a um Tutor específico.",
         "parameters": [
           {
             "name": "tutorId",
@@ -400,11 +560,91 @@
       }
     },
     "/api/Tutor": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "summary": "Lista todos os tutores",
+        "description": "Retorna todos os tutores cadastrados no sistema KuraVet.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Tutor"
         ],
-        "summary": "Cadastra um novo Tutor no sistema KuraVet.",
+        "summary": "Adicionar novo tutor",
+        "description": "Cadastra um novo tutor no banco de dados.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tutor"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tutor"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tutor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tutor/{id}": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "summary": "Obter tutor por ID",
+        "description": "Busca um tutor específico pelo seu ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tutor"
+        ],
+        "summary": "Editar tutor existente",
+        "description": "Atualiza os dados de um tutor já cadastrado.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -430,24 +670,12 @@
           }
         }
       },
-      "get": {
+      "delete": {
         "tags": [
           "Tutor"
         ],
-        "summary": "Lista todos os Tutores cadastrados.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Tutor/{id}": {
-      "get": {
-        "tags": [
-          "Tutor"
-        ],
-        "summary": "Busca um Tutor específico pelo ID.",
+        "summary": "Deletar um tutor",
+        "description": "Remove um tutor do banco de dados pelo ID.",
         "parameters": [
           {
             "name": "id",

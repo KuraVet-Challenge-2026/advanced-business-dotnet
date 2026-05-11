@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {}
+    "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {
+    "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+        "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
         "projectName": "KuraVet.Api",
-        "projectPath": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+        "projectPath": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
         "packagesPath": "C:\\Users\\labsfiap\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\obj\\",
+        "outputPath": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -66,6 +66,10 @@
               "version": "[8.21.121, )"
             },
             "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
               "target": "Package",
               "version": "[6.6.2, )"
             }

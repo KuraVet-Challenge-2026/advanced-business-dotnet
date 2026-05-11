@@ -180,14 +180,24 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
-    "Method": "Criar",
+    "Method": "Get",
+    "RelativePath": "api/EventoConsulta",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
+    "Method": "Post",
     "RelativePath": "api/EventoConsulta",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "evento",
+        "Name": "model",
         "Type": "KuraVet.Api.Models.EventoConsulta",
         "IsRequired": true
       }
@@ -196,7 +206,7 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
-    "Method": "BuscarPorId",
+    "Method": "Get",
     "RelativePath": "api/EventoConsulta/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -212,7 +222,44 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
-    "Method": "LinhaDoTempoPet",
+    "Method": "Put",
+    "RelativePath": "api/EventoConsulta/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "KuraVet.Api.Models.EventoConsulta",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
+    "Method": "Delete",
+    "RelativePath": "api/EventoConsulta/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.EventoConsultaController",
+    "Method": "GetPorPet",
     "RelativePath": "api/EventoConsulta/pet/{petId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -228,14 +275,24 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.PetController",
-    "Method": "Criar",
+    "Method": "Get",
+    "RelativePath": "api/Pet",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.PetController",
+    "Method": "Post",
     "RelativePath": "api/Pet",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "pet",
+        "Name": "model",
         "Type": "KuraVet.Api.Models.Pet",
         "IsRequired": true
       }
@@ -244,7 +301,7 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.PetController",
-    "Method": "BuscarPorId",
+    "Method": "Get",
     "RelativePath": "api/Pet/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -260,7 +317,44 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.PetController",
-    "Method": "BuscarPorTutor",
+    "Method": "Put",
+    "RelativePath": "api/Pet/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "KuraVet.Api.Models.Pet",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.PetController",
+    "Method": "Delete",
+    "RelativePath": "api/Pet/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.PetController",
+    "Method": "GetPorTutor",
     "RelativePath": "api/Pet/tutor/{tutorId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -276,23 +370,7 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.TutorController",
-    "Method": "Criar",
-    "RelativePath": "api/Tutor",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "tutor",
-        "Type": "KuraVet.Api.Models.Tutor",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "KuraVet.Api.Controllers.TutorController",
-    "Method": "ListarTodos",
+    "Method": "Get",
     "RelativePath": "api/Tutor",
     "HttpMethod": "GET",
     "IsController": true,
@@ -302,9 +380,62 @@
   },
   {
     "ContainingType": "KuraVet.Api.Controllers.TutorController",
-    "Method": "BuscarPorId",
+    "Method": "Post",
+    "RelativePath": "api/Tutor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "KuraVet.Api.Models.Tutor",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.TutorController",
+    "Method": "Get",
     "RelativePath": "api/Tutor/{id}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.TutorController",
+    "Method": "Put",
+    "RelativePath": "api/Tutor/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "KuraVet.Api.Models.Tutor",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "KuraVet.Api.Controllers.TutorController",
+    "Method": "Delete",
+    "RelativePath": "api/Tutor/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [

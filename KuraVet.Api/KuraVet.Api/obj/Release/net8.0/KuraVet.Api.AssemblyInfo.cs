@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KuraVet.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7619d30b778115723246442224e3dfb92dc20b91")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a9fafd3271b913cb53017342bb3b1d65f86b429f")]
 [assembly: System.Reflection.AssemblyProductAttribute("KuraVet.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KuraVet.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -18,7 +18,7 @@ namespace KuraVet.Api.Models
         [Required]
         public int TutorId { get; set; }
 
-        [JsonIgnore] // Impede o loop infinito no Swagger
+        [JsonIgnore] 
         public Tutor? Tutor { get; set; }
 
         [JsonIgnore]

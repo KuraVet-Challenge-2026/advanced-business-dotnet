@@ -13,7 +13,7 @@ namespace KuraVet.Api.Models
 
         [Required]
         [MaxLength(50)]
-        public string TipoEvento { get; set; } = string.Empty; // Ex: Vacina, Retorno, Exame, Cirurgia
+        public string TipoEvento { get; set; } = string.Empty; 
 
         [Required]
         public DateTime DataEvento { get; set; }

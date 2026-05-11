@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1FEtIkxFmdo=",
+  "dgSpecHash": "ugyMt17LQm0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\labsfiap\\Desktop\\advanced-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+  "projectFilePath": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\labsfiap\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
@@ -34,6 +34,7 @@
     "C:\\Users\\labsfiap\\.nuget\\packages\\oracle.entityframeworkcore\\8.21.121\\oracle.entityframeworkcore.8.21.121.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\oracle.manageddataaccess.core\\3.21.120\\oracle.manageddataaccess.core.3.21.120.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
+    "C:\\Users\\labsfiap\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\6.6.2\\swashbuckle.aspnetcore.annotations.6.6.2.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
