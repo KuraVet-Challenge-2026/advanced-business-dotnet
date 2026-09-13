@@ -1,5 +1,7 @@
 ﻿using KuraVet.Api.Data;
+using KuraVet.Api.Domain;
 using KuraVet.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
@@ -9,13 +11,21 @@ namespace KuraVet.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class CheckinController : ControllerBase
     {
         private readonly KuraVetDbContext _context;
+        private readonly ICheckinRiscoService _riscoService;
+        private readonly ILogger<CheckinController> _logger;
 
-        public CheckinController(KuraVetDbContext context)
+        public CheckinController(
+            KuraVetDbContext context,
+            ICheckinRiscoService riscoService,
+            ILogger<CheckinController> logger)
         {
             _context = context;
+            _riscoService = riscoService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -25,10 +35,20 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var resultado = await _context.CheckinsHistoricos.ToListAsync();
-                if (!resultado.Any()) return NoContent();
+                if (!resultado.Any())
+                {
+                    _logger.LogInformation("Listagem de check-ins retornou vazia.");
+                    return NoContent();
+                }
+
+                _logger.LogInformation("Listagem de check-ins retornou {Quantidade} registro(s).", resultado.Count);
                 return Ok(resultado);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao listar check-ins.");
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -38,10 +58,19 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var checkin = await _context.CheckinsHistoricos.FindAsync(id);
-                if (checkin == null) return NotFound();
+                if (checkin == null)
+                {
+                    _logger.LogWarning("Check-in {CheckinId} não encontrado.", id);
+                    return NotFound();
+                }
+
                 return Ok(checkin);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao buscar o check-in {CheckinId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("pet/{petId:int}")]
@@ -55,10 +84,19 @@ namespace KuraVet.Api.Controllers
                     .OrderByDescending(c => c.DataCheckin)
                     .ToListAsync();
 
-                if (!historico.Any()) return NoContent();
+                if (!historico.Any())
+                {
+                    _logger.LogInformation("Pet {PetId} não possui histórico de check-ins.", petId);
+                    return NoContent();
+                }
+
                 return Ok(historico);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao buscar histórico de check-ins do pet {PetId}.", petId);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("risco/{nivelRisco}")]
@@ -71,10 +109,19 @@ namespace KuraVet.Api.Controllers
                     .Where(c => c.NivelRiscoIA != null && c.NivelRiscoIA.ToLower() == nivelRisco.ToLower())
                     .ToListAsync();
 
-                if (!alertas.Any()) return NoContent();
+                if (!alertas.Any())
+                {
+                    _logger.LogInformation("Nenhum check-in encontrado para o nível de risco '{NivelRisco}'.", nivelRisco);
+                    return NoContent();
+                }
+
                 return Ok(alertas);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao filtrar check-ins pelo nível de risco '{NivelRisco}'.", nivelRisco);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -83,15 +130,23 @@ namespace KuraVet.Api.Controllers
         {
             try
             {
-                // Lógica da IA simplificada
-                model.NivelRiscoIA = model.TempoPreenchimentoCapilar > 2 ? "Moderado" : "Baixo";
+                // Classificação de risco 
+                model.NivelRiscoIA = _riscoService.ClassificarRisco(model.TempoPreenchimentoCapilar);
 
                 _context.CheckinsHistoricos.Add(model);
                 await _context.SaveChangesAsync();
 
+                _logger.LogInformation(
+                    "Check-in {CheckinId} registrado para o pet {PetId} com risco '{NivelRisco}'.",
+                    model.Id, model.PetId, model.NivelRiscoIA);
+
                 return CreatedAtAction(nameof(Get), new { id = model.Id }, model);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao registrar check-in.");
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -101,7 +156,11 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var checkinExistente = await _context.CheckinsHistoricos.FindAsync(id);
-                if (checkinExistente == null) return NotFound();
+                if (checkinExistente == null)
+                {
+                    _logger.LogWarning("Tentativa de editar check-in inexistente {CheckinId}.", id);
+                    return NotFound();
+                }
 
                 checkinExistente.FrequenciaRespiratoria = model.FrequenciaRespiratoria;
                 checkinExistente.TempoPreenchimentoCapilar = model.TempoPreenchimentoCapilar;
@@ -109,14 +168,19 @@ namespace KuraVet.Api.Controllers
                 checkinExistente.NivelHidratacao = model.NivelHidratacao;
                 checkinExistente.PetId = model.PetId;
 
-                // Recalcula o risco na edição
-                checkinExistente.NivelRiscoIA = model.TempoPreenchimentoCapilar > 2 ? "Moderado" : "Baixo";
+                // Recalcula o risco
+                checkinExistente.NivelRiscoIA = _riscoService.ClassificarRisco(model.TempoPreenchimentoCapilar);
 
                 _context.CheckinsHistoricos.Update(checkinExistente);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Check-in {CheckinId} atualizado com sucesso.", id);
                 return Ok(model);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao atualizar o check-in {CheckinId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -126,13 +190,22 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var checkin = await _context.CheckinsHistoricos.FindAsync(id);
-                if (checkin == null) return NotFound();
+                if (checkin == null)
+                {
+                    _logger.LogWarning("Tentativa de remover check-in inexistente {CheckinId}.", id);
+                    return NotFound();
+                }
 
                 _context.CheckinsHistoricos.Remove(checkin);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Check-in {CheckinId} removido com sucesso.", id);
                 return Ok(checkin);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao remover o check-in {CheckinId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

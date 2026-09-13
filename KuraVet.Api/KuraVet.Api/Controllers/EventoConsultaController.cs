@@ -1,5 +1,6 @@
 ﻿using KuraVet.Api.Data;
 using KuraVet.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
@@ -9,10 +10,17 @@ namespace KuraVet.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class EventoConsultaController : ControllerBase
     {
         private readonly KuraVetDbContext _context;
-        public EventoConsultaController(KuraVetDbContext context) => _context = context;
+        private readonly ILogger<EventoConsultaController> _logger;
+
+        public EventoConsultaController(KuraVetDbContext context, ILogger<EventoConsultaController> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
 
         [HttpGet]
         [SwaggerOperation(Summary = "Lista todos os eventos clínicos", Description = "Retorna todos os eventos clínicos cadastrados no banco.")]
@@ -21,10 +29,20 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var resultado = await _context.EventosConsultas.ToListAsync();
-                if (!resultado.Any()) return NoContent();
+                if (!resultado.Any())
+                {
+                    _logger.LogInformation("Listagem de eventos clínicos retornou vazia.");
+                    return NoContent();
+                }
+
+                _logger.LogInformation("Listagem de eventos clínicos retornou {Quantidade} registro(s).", resultado.Count);
                 return Ok(resultado);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao listar eventos clínicos.");
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -34,10 +52,19 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var evento = await _context.EventosConsultas.FindAsync(id);
-                if (evento is null) return NotFound();
+                if (evento is null)
+                {
+                    _logger.LogWarning("Evento clínico {EventoId} não encontrado.", id);
+                    return NotFound();
+                }
+
                 return Ok(evento);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao buscar o evento clínico {EventoId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("pet/{petId:int}")]
@@ -51,10 +78,19 @@ namespace KuraVet.Api.Controllers
                     .OrderByDescending(e => e.DataEvento)
                     .ToListAsync();
 
-                if (!linhaDoTempo.Any()) return NoContent();
+                if (!linhaDoTempo.Any())
+                {
+                    _logger.LogInformation("Pet {PetId} não possui eventos clínicos registrados.", petId);
+                    return NoContent();
+                }
+
                 return Ok(linhaDoTempo);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao buscar a linha do tempo clínica do pet {PetId}.", petId);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -65,9 +101,14 @@ namespace KuraVet.Api.Controllers
             {
                 _context.EventosConsultas.Add(model);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Evento clínico {EventoId} registrado para o pet {PetId}.", model.Id, model.PetId);
                 return CreatedAtAction(nameof(Get), new { id = model.Id }, model);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao registrar evento clínico.");
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -77,7 +118,11 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var evento = await _context.EventosConsultas.FindAsync(id);
-                if (evento is null) return NotFound();
+                if (evento is null)
+                {
+                    _logger.LogWarning("Tentativa de editar evento clínico inexistente {EventoId}.", id);
+                    return NotFound();
+                }
 
                 evento.TipoEvento = model.TipoEvento;
                 evento.DataEvento = model.DataEvento;
@@ -87,9 +132,14 @@ namespace KuraVet.Api.Controllers
 
                 _context.EventosConsultas.Update(evento);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Evento clínico {EventoId} atualizado com sucesso.", id);
                 return Ok(model);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao atualizar o evento clínico {EventoId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -99,13 +149,22 @@ namespace KuraVet.Api.Controllers
             try
             {
                 var evento = await _context.EventosConsultas.FindAsync(id);
-                if (evento is null) return NotFound();
+                if (evento is null)
+                {
+                    _logger.LogWarning("Tentativa de remover evento clínico inexistente {EventoId}.", id);
+                    return NotFound();
+                }
 
                 _context.EventosConsultas.Remove(evento);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Evento clínico {EventoId} removido com sucesso.", id);
                 return Ok(evento);
             }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Falha ao remover o evento clínico {EventoId}.", id);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

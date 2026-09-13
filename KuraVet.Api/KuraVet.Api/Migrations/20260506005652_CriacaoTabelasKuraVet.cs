@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KuraVet.Api.Migrations
 {
-    /// <inheritdoc />
     public partial class CriacaoTabelasKuraVet : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -80,7 +78,6 @@ namespace KuraVet.Api.Migrations
                 column: "TutorId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

@@ -1,0 +1,17 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Serilog file sink output (Sprint 3)
+logs/
+
+# Test results
+TestResults/

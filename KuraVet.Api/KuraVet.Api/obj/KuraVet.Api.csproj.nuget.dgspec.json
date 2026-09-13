@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {}
+    "C:\\Users\\hrqma\\OneDrive\\Área de Trabalho\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {
+    "C:\\Users\\hrqma\\OneDrive\\Área de Trabalho\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+        "projectUniqueName": "C:\\Users\\hrqma\\OneDrive\\Área de Trabalho\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
         "projectName": "KuraVet.Api",
-        "projectPath": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
-        "packagesPath": "C:\\Users\\labsfiap\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\labsfiap\\Desktop\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\obj\\",
+        "projectPath": "C:\\Users\\hrqma\\OneDrive\\Área de Trabalho\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\KuraVet.Api.csproj",
+        "packagesPath": "C:\\Users\\hrqma\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hrqma\\OneDrive\\Área de Trabalho\\advanced-business-dotnet\\KuraVet.Api\\KuraVet.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\labsfiap\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hrqma\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,11 +26,11 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -45,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
@@ -61,9 +62,49 @@
               "target": "Package",
               "version": "[8.0.10, )"
             },
+            "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "OpenTelemetry": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "OpenTelemetry.Exporter.Console": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "OpenTelemetry.Instrumentation.AspNetCore": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "OpenTelemetry.Instrumentation.Http": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
             "Oracle.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.21.121, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -93,7 +134,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -3,6 +3,15 @@ O KuraVet é uma solução de backend desenvolvida em .NET 8 para o Challenge 20
 O projeto foca na continuidade do cuidado e no engajamento da jornada de saúde do pet, transformando a relação reativa (ir ao veterinário apenas na doença) em uma jornada proativa e contínua.
 Esta API gerencia desde o cadastro de tutores e pets até o monitoramento preventivo via check-ins de sinais vitais e histórico clínico (linha do tempo).
 
+**Novidades da Sprint 3 (Advanced Business Development with .NET):**
+- 🩺 **Health Checks** (`/health`, `/health/live`, `/health/ready`) para monitorar a saúde da API, a conectividade com o banco Oracle e o uso de recursos.
+- 📝 **Logging estruturado** com Serilog (console + arquivo), com correlação de requisições entre as camadas.
+- 📊 **Tracing distribuído e métricas de desempenho** com OpenTelemetry (tempo de resposta, taxa de erros).
+- 🔑 **Autenticação por API Key** em todos os endpoints de negócio.
+- 🧪 **Testes automatizados** com xUnit (unitários com Moq + integração com WebApplicationFactory).
+
+Veja a seção [🩺 Sprint 3 — Monitoramento, Observabilidade e Testes Automatizados](#-sprint-3--monitoramento-observabilidade-e-testes-automatizados) para todos os detalhes.
+
 ---
 
 # 👥 Equipe (Turma 2TDSPO)
@@ -230,9 +239,139 @@ public int TempoPreenchimentoCapilar { get; set; }
 
 ---
 
+---
+
+# 🩺 Sprint 3 — Monitoramento, Observabilidade e Testes Automatizados
+
+Esta seção documenta o que foi adicionado na Sprint 3 (Advanced Business Development with .NET), em cima da API já existente. A entrega é **puramente local**: sem deploy na Azure e sem integração com serviços/interfaces externas.
+
+## 🩺 Health Checks
+
+A API expõe três endpoints de Health Check (`Microsoft.Extensions.Diagnostics.HealthChecks`), todos retornando um JSON detalhado com o status geral, a duração de cada checagem e dados adicionais:
+
+| Endpoint | Finalidade | Checagens incluídas |
+|---|---|---|
+| `GET /health` | Visão geral completa | Banco Oracle + API + Memória |
+| `GET /health/live` | Liveness (a API está de pé?) | Apenas a checagem `api-self` |
+| `GET /health/ready` | Readiness (pronta para atender?) | Banco Oracle (`oracle-database`) + Memória (`system-resources`) |
+
+Esses três endpoints **não exigem autenticação** (API Key), para permitir que ferramentas de monitoramento/orquestração os consultem livremente.
+
+Exemplo de resposta de `GET /health`:
+```json
+{
+  "status": "Healthy",
+  "totalDurationMs": 12.4,
+  "checks": [
+    {
+      "name": "oracle-database",
+      "status": "Healthy",
+      "description": null,
+      "durationMs": 8.1,
+      "tags": [ "ready", "db" ],
+      "data": {}
+    },
+    {
+      "name": "api-self",
+      "status": "Healthy",
+      "description": "A API KuraVet está em execução e respondendo normalmente.",
+      "durationMs": 0.01,
+      "tags": [ "live" ],
+      "data": {}
+    },
+    {
+      "name": "system-resources",
+      "status": "Healthy",
+      "description": "Uso de memória dentro do esperado.",
+      "durationMs": 0.3,
+      "tags": [ "ready" ],
+      "data": { "memoriaAlocadaMB": 42.7 }
+    }
+  ]
+}
+```
+
+> ℹ️ A checagem `system-resources` (uso de memória do processo) substitui, nesta entrega 100% local, uma verificação de "disponibilidade de serviços externos" — já que o projeto não integra com nenhum serviço de terceiros.
+
+## 📝 Logging Estruturado (Serilog)
+
+- Logs em `Information`, `Warning` (respostas de erro/"não encontrado") e `Error` (exceções), em todos os Controllers.
+- Saída simultânea em **Console** e em **arquivo** (`logs/kuravet-api-{data}.log`, rotação diária, mantendo os últimos 7 arquivos).
+- Cada requisição tem um `CorrelationId` (baseado no `TraceIdentifier` do ASP.NET Core) propagado nos logs e devolvido no header de resposta `X-Correlation-Id`, permitindo correlacionar uma mesma requisição entre as diferentes camadas da aplicação.
+- Configuração em `appsettings.json`, seção `"Serilog"`.
+
+## 📊 Tracing e Métricas (OpenTelemetry)
+
+- Tracing distribuído com `ActivitySource` próprio (`KuraVet.Api`) + instrumentação automática de ASP.NET Core e `HttpClient`.
+- Métricas customizadas expostas via `Meter` (`KuraVet.Api.Metrics`):
+  - `kuravet_api_requests_total` — total de requisições.
+  - `kuravet_api_requests_errors_total` — total de requisições com status ≥ 400 (taxa de erros).
+  - `kuravet_api_request_duration_ms` — tempo de resposta (ms).
+- Exportador **Console** (traces e métricas aparecem no terminal onde a API está rodando) — mantém a entrega 100% local, sem Azure Application Insights nem coletores externos.
+
+## 🔑 Autenticação (API Key)
+
+O projeto da Sprint 2 não possuía nenhum mecanismo de autenticação. Como a rubrica da Sprint 3 exige que os testes de integração cubram o fluxo de autenticação, foi adicionado um esquema simples e **100% local** (sem integração com nenhum provedor de identidade externo): todos os endpoints de `Tutor`, `Pet`, `Checkin` e `EventoConsulta` agora exigem o header `X-Api-Key`.
+
+- Chave padrão (ambiente de desenvolvimento): `kuravet-dev-key-2026` (configurável em `appsettings.json`, chave `Authentication:ApiKey`).
+- Sem o header ou com uma chave incorreta → `401 Unauthorized`.
+- Os endpoints de Health Check (`/health*`) **não** exigem essa chave.
+- No Swagger UI, clique em **Authorize** e informe a chave para testar os endpoints protegidos.
+
+## 🧪 Testes Automatizados
+
+A solução agora tem **três projetos**:
+
+```
+KuraVet.Api.sln
+├── KuraVet.Api                     (API)
+├── KuraVet.Api.Tests.Unit          (xUnit + Moq — Domínio e Aplicação)
+└── KuraVet.Api.Tests.Integration   (xUnit + WebApplicationFactory)
+```
+
+### Como rodar os testes
+
+```bash
+# Todos os testes (os dois projetos)
+dotnet test
+
+# Apenas os testes unitários
+dotnet test KuraVet.Api.Tests.Unit
+
+# Apenas os testes de integração
+dotnet test KuraVet.Api.Tests.Integration
+```
+
+Os testes de integração **não dependem do Oracle real**: o `CustomWebApplicationFactory` substitui o `KuraVetDbContext` pelo provider **InMemory** do EF Core, então `dotnet test` roda offline, sem nenhuma credencial de banco.
+
+### `KuraVet.Api.Tests.Unit`
+
+- **Domínio**: validação das Data Annotations de `Tutor`, `Pet`, `CheckinHistorico`, `EventoConsulta`, e testes de `CheckinRiscoService` (regra de classificação de risco, extraída do `CheckinController`).
+- **Aplicação** (Controllers): `TutorControllerTests`, `PetControllerTests`, `CheckinControllerTests`, `EventoConsultaControllerTests` — dependências mockadas com **Moq** (`ILogger`, e `ICheckinRiscoService` no caso do `CheckinController`), persistência com EF Core InMemory.
+- `PetControllerTests` usa `IClassFixture<SeedDataFixture>` para compartilhar uma base semeada entre os testes da classe.
+
+### `KuraVet.Api.Tests.Integration`
+
+- `CustomWebApplicationFactory : WebApplicationFactory<Program>` — troca o Oracle pelo InMemory e injeta uma API Key de teste.
+- `KuraVetApiCollection` (`ICollectionFixture`) compartilha essa mesma factory entre as classes de teste de endpoints, evitando subir a aplicação uma vez por classe.
+- Cobrem o fluxo HTTP completo: `AuthenticationTests` (401 sem chave / com chave errada / 200-204 com chave válida), `HealthCheckEndpointTests`, `TutorEndpointsTests`, `PetEndpointsTests`, `CheckinEndpointsTests` (inclui a classificação de risco de ponta a ponta) e `EventoConsultaEndpointsTests` — sempre cobrindo sucesso, 404 e 400 (validação).
+
+### Convenção de nomenclatura
+
+Todos os testes seguem `MetodoTestado_Cenario_ResultadoEsperado`, por exemplo:
+`Post_CheckinComTpcAcimaDeDois_DeveRetornarRiscoModerado`.
+
+---
+
 # 🛠️ Tecnologias
 - ASP.NET Core 8.0
-- Entity Framework Core 8 (Oracle)
+- Entity Framework Core 8 (Oracle / InMemory nos testes)
 - Swagger UI / OpenAPI (`Swashbuckle.AspNetCore` 6.6.2)
 - Scalar (`Scalar.AspNetCore` 2.5.6)
-- Auto-análise de Risco (Simulação de IA)
+- Auto-análise de Risco (Simulação de IA) — `KuraVet.Api.Domain.CheckinRiscoService`
+- **Sprint 3:**
+  - `Microsoft.Extensions.Diagnostics.HealthChecks` + `...HealthChecks.EntityFrameworkCore` (Health Checks)
+  - `Serilog.AspNetCore`, `Serilog.Sinks.Console`, `Serilog.Sinks.File` (logging estruturado)
+  - `OpenTelemetry`, `OpenTelemetry.Instrumentation.AspNetCore/Http`, `OpenTelemetry.Exporter.Console` (tracing e métricas)
+  - Autenticação por API Key (esquema local, sem integração externa)
+  - `xUnit`, `Moq`, `Microsoft.AspNetCore.Mvc.Testing`, `Microsoft.EntityFrameworkCore.InMemory` (testes automatizados)

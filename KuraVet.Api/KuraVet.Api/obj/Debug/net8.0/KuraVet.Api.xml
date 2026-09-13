@@ -4,66 +4,87 @@
         <name>KuraVet.Api</name>
     </assembly>
     <members>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.RegistrarCheckin(KuraVet.Api.Models.CheckinHistorico)">
-             <summary>
-             Registra um novo Check-in de saúde física para um Pet.
-             </summary>
-             <remarks>
-             Exemplo de requisição:
-            
-                 POST /api/Checkin
-                 {
-                    "frequenciaRespiratoria": 25,
-                    "tempoPreenchimentoCapilar": 1,
-                    "corMucosa": "Rosada",
-                    "nivelHidratacao": "Normal",
-                    "petId": 1
-                 }
-            
-             </remarks>
-             <response code="201">Check-in registrado com sucesso.</response>
-             <response code="400">Se os dados enviados forem inválidos ou incompletos.</response>
-        </member>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorId(System.Int32)">
+        <member name="T:KuraVet.Api.Domain.CheckinRiscoService">
             <summary>
-            Busca um Check-in específico pelo seu ID.
+            Implementação do serviço de domínio de classificação de risco de Check-ins.
+            A regra é a mesma que já existia (inline) no <c>CheckinController</c> — foi apenas
+            extraída para uma classe de Domínio própria e testável isoladamente (xUnit + AAA),
+            sem qualquer alteração de comportamento observável pela API.
             </summary>
-            <param name="id">O ID do Check-in no banco de dados.</param>
-            <response code="200">Retorna os dados do Check-in solicitado.</response>
-            <response code="404">Se o Check-in não for encontrado.</response>
         </member>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorPet(System.Int32)">
+        <member name="T:KuraVet.Api.Domain.ICheckinRiscoService">
             <summary>
-            Lista o histórico completo de Check-ins de um Pet específico.
+            Contrato do serviço de domínio responsável por classificar o nível de risco
+            de um Pet a partir dos sinais vitais coletados em um Check-in.
             </summary>
-            <param name="petId">O ID do Pet (ex: 1).</param>
-            <response code="200">Retorna a lista de check-ins ordenados por data.</response>
-            <response code="404">Se o Pet não possuir nenhum histórico.</response>
         </member>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.BuscarPorRisco(System.String)">
+        <member name="M:KuraVet.Api.Domain.ICheckinRiscoService.ClassificarRisco(System.Int32)">
             <summary>
-            Filtra os Check-ins baseados no nível de Risco definido pela IA.
+            Classifica o nível de risco com base no Tempo de Preenchimento Capilar (TPC).
             </summary>
-            <param name="nivelRisco">O nível de risco (ex: Baixo, Moderado, Grave).</param>
-            <response code="200">Retorna os alertas correspondentes ao nível de risco.</response>
+            <param name="tempoPreenchimentoCapilar">TPC em segundos.</param>
+            <returns>"Moderado" quando o TPC é maior que 2 segundos; caso contrário, "Baixo".</returns>
         </member>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.AtualizarCheckin(System.Int32,KuraVet.Api.Models.CheckinHistorico)">
+        <member name="T:KuraVet.Api.Infrastructure.Authentication.ApiKeyAuthenticationHandler">
             <summary>
-            Atualiza os dados de um Check-in existente.
+            Handler de autenticação simples, 100% local, baseado em uma API Key estática
+            enviada no header <c>X-Api-Key</c>. Não integra com nenhum provedor de identidade
+            externo (Azure AD, OAuth, etc) — está em conformidade com a restrição de "sem
+            integrações externas" desta entrega, e existe para permitir que os testes de
+            integração da Sprint 3 cubram o fluxo de autenticação exigido pela rubrica.
             </summary>
-            <param name="id">ID do Check-in a ser atualizado.</param>
-            <param name="checkinAtualizado">O JSON contendo os novos dados do check-in.</param>
-            <response code="204">Check-in atualizado com sucesso.</response>
-            <response code="400">Se o ID da URL for diferente do ID no corpo da requisição.</response>
-            <response code="404">Se o Check-in não existir.</response>
         </member>
-        <member name="M:KuraVet.Api.Controllers.CheckinController.DeletarCheckin(System.Int32)">
+        <member name="T:KuraVet.Api.Infrastructure.Authentication.ApiKeyDefaults">
             <summary>
-            Deleta permanentemente um Check-in do histórico do Pet.
+            Constantes do esquema de autenticação por API Key.
             </summary>
-            <param name="id">ID do Check-in a ser deletado.</param>
-            <response code="204">Remoção concluída com sucesso.</response>
-            <response code="404">Se o Check-in não for encontrado.</response>
+        </member>
+        <member name="T:KuraVet.Api.Infrastructure.HealthChecks.ApiSelfHealthCheck">
+            <summary>
+            Health Check de liveness: confirma apenas que o processo da API KuraVet
+            está em execução e respondendo, sem depender de nenhuma dependência externa
+            (banco de dados, etc). Usado no endpoint <c>/health/live</c>.
+            </summary>
+        </member>
+        <member name="T:KuraVet.Api.Infrastructure.HealthChecks.HealthCheckResponseWriter">
+            <summary>
+            Formata a resposta dos endpoints de Health Check em JSON detalhado,
+            incluindo o status geral, a duração total e o detalhamento de cada checagem.
+            </summary>
+        </member>
+        <member name="T:KuraVet.Api.Infrastructure.HealthChecks.SystemResourcesHealthCheck">
+            <summary>
+            Health Check de disponibilidade de recursos do processo (memória alocada pelo .NET).
+            Representa, nesta entrega puramente local (sem integrações externas), o exemplo de
+            verificação de "disponibilidade de serviços/recursos" além do banco de dados,
+            exigido pela rubrica da Sprint 3 — sem depender de nenhuma chamada de rede externa.
+            Usado no endpoint <c>/health/ready</c>.
+            </summary>
+        </member>
+        <member name="T:KuraVet.Api.Infrastructure.Observability.ApiTelemetry">
+            <summary>
+            Ponto único de acesso ao <see cref="F:KuraVet.Api.Infrastructure.Observability.ApiTelemetry.ActivitySource"/> (tracing distribuído) e ao
+            <see cref="F:KuraVet.Api.Infrastructure.Observability.ApiTelemetry.Meter"/> (métricas) customizados da API KuraVet, usados para
+            complementar a instrumentação automática do OpenTelemetry para ASP.NET Core.
+            </summary>
+        </member>
+        <member name="F:KuraVet.Api.Infrastructure.Observability.ApiTelemetry.RequestsTotal">
+            <summary>Total de requisições HTTP recebidas pela API.</summary>
+        </member>
+        <member name="F:KuraVet.Api.Infrastructure.Observability.ApiTelemetry.RequestErrorsTotal">
+            <summary>Total de requisições HTTP finalizadas com status de erro (>= 400).</summary>
+        </member>
+        <member name="F:KuraVet.Api.Infrastructure.Observability.ApiTelemetry.RequestDuration">
+            <summary>Tempo de resposta das requisições HTTP, em milissegundos.</summary>
+        </member>
+        <member name="T:KuraVet.Api.Middlewares.RequestMetricsMiddleware">
+            <summary>
+            Middleware responsável por:
+            1) Registrar métricas de desempenho (tempo de resposta e taxa de erros) via OpenTelemetry;
+            2) Propagar um Correlation Id (baseado no TraceIdentifier da requisição) tanto no
+               header de resposta quanto no contexto de log do Serilog, permitindo correlacionar
+               uma mesma requisição entre as diferentes camadas da aplicação nos logs estruturados.
+            </summary>
         </member>
         <member name="T:KuraVet.Api.Migrations.CriacaoTabelasKuraVet">
             <inheritdoc />
