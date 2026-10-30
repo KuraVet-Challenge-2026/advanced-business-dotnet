@@ -1,0 +1,39 @@
+# Build
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+
+# IDEs
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.swp
+
+# Logs da aplicação (Serilog)
+logs/
+*.log
+
+# Testes e cobertura
+TestResults/
+coverage*/
+*.coverage
+*.coveragexml
+coverage.cobertura.xml
+docs/coverage/
+
+# Segredos locais (NUNCA versionar)
+.env
+*.env
+appsettings.Local.json
+secrets.json
+
+# Sistema
+.DS_Store
+Thumbs.db

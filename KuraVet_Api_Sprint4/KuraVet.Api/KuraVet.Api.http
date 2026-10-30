@@ -1,0 +1,102 @@
+# Requisições de exemplo
+# Rode a API (perfil http) e faça o login com o admin configurado em user-secrets.
+# Copie o accessToken retornado para a variável @token.
+
+@host = http://localhost:5180
+@token = cole-o-accessToken-aqui
+
+### Health check (público)
+GET {{host}}/health
+
+### Login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "<email-do-admin>",
+  "senha": "<senha-do-admin>"
+}
+
+### Autocadastro (perfil Tutor)
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "nome": "Juliana Ferreira",
+  "email": "juliana@kuravet.com",
+  "senha": "SenhaForte@123"
+}
+
+### Criar tutor
+POST {{host}}/api/Tutor
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "Juliana Ferreira"
+}
+
+### Listar tutores (paginação, ordenação e filtro)
+GET {{host}}/api/Tutor?page=1&pageSize=5&sortBy=nome&sortDir=asc&nome=ju
+Authorization: Bearer {{token}}
+
+### Criar pet
+POST {{host}}/api/Pet
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "Thor",
+  "tutorId": 1
+}
+
+### Registrar check-in
+POST {{host}}/api/Checkin
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "frequenciaRespiratoria": 32,
+  "tempoPreenchimentoCapilar": 3,
+  "corMucosa": "Pálida",
+  "nivelHidratacao": "Reduzida",
+  "petId": 1
+}
+
+### Check-ins de risco moderado
+GET {{host}}/api/Checkin/risco/Moderado
+Authorization: Bearer {{token}}
+
+### Registrar evento clínico (Admin ou Veterinario)
+POST {{host}}/api/EventoConsulta
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipoEvento": "Vacina",
+  "dataEvento": "2026-10-01T14:30:00Z",
+  "descricao": "V10 - reforço anual",
+  "veterinarioResponsavel": "Dra. Marina Lopes",
+  "petId": 1
+}
+
+### Linha do tempo clínica do pet
+GET {{host}}/api/EventoConsulta/pet/1
+Authorization: Bearer {{token}}
+
+### Registrar relato de comportamento (MongoDB)
+POST {{host}}/api/RelatoComportamento
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "petId": 1,
+  "categoria": "Alimentacao",
+  "descricao": "Comeu metade da ração e bebeu menos água que o normal.",
+  "intensidade": 3,
+  "tags": ["apetite", "agua"]
+}
+
+### Relatos do pet com intensidade >= 3
+GET {{host}}/api/RelatoComportamento?petId=1&intensidadeMinima=3
+Authorization: Bearer {{token}}

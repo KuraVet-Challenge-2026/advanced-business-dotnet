@@ -1,0 +1,13 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: kuravet-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - kuravet-mongo-data:/data/db
+      - ./docker/mongo-init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  kuravet-mongo-data:

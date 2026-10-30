@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <!-- Segredos locais (Oracle, Mongo, JWT, admin inicial) ficam fora do repositório: dotnet user-secrets -->
+    <UserSecretsId>8f3c2a71-4d5e-4b9a-9c1d-2e7f6a5b4c3d</UserSecretsId>
+  </PropertyGroup>
+
+  <!--
+    Camada de Apresentação: controllers finos, middlewares, tratamento global de exceções,
+    HATEOAS, autenticação JWT, Swagger, health checks e observabilidade.
+  -->
+
+  <ItemGroup>
+    <!-- Necessário para os comandos dotnet ef (startup project) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <!-- Autenticação -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+
+    <!-- Documentação -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
+
+    <!-- Logging estruturado (Sprint 3) -->
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.4" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+
+    <!-- Tracing e métricas (Sprint 3) -->
+    <PackageReference Include="OpenTelemetry" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KuraVet.Application\KuraVet.Application.csproj" />
+    <ProjectReference Include="..\KuraVet.Infrastructure\KuraVet.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
