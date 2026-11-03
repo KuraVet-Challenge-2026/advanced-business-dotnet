@@ -1,377 +1,382 @@
-# KuraVet API - Infraestrutura de Saúde Veterinária Digital 🐾
-O KuraVet é uma solução de backend desenvolvida em .NET 8 para o Challenge 2026, em parceria entre a FIAP e a Clyvo.
-O projeto foca na continuidade do cuidado e no engajamento da jornada de saúde do pet, transformando a relação reativa (ir ao veterinário apenas na doença) em uma jornada proativa e contínua.
-Esta API gerencia desde o cadastro de tutores e pets até o monitoramento preventivo via check-ins de sinais vitais e histórico clínico (linha do tempo).
+# KuraVet API — Advanced Business Development with .NET (Sprint 4)
 
-**Novidades da Sprint 3 (Advanced Business Development with .NET):**
-- 🩺 **Health Checks** (`/health`, `/health/live`, `/health/ready`) para monitorar a saúde da API, a conectividade com o banco Oracle e o uso de recursos.
-- 📝 **Logging estruturado** com Serilog (console + arquivo), com correlação de requisições entre as camadas.
-- 📊 **Tracing distribuído e métricas de desempenho** com OpenTelemetry (tempo de resposta, taxa de erros).
-- 🔑 **Autenticação por API Key** em todos os endpoints de negócio.
-- 🧪 **Testes automatizados** com xUnit (unitários com Moq + integração com WebApplicationFactory).
+API RESTful do **KuraVet**, plataforma de cuidado contínuo do pet (Challenge FIAP 2026 x Clyvo Vet).
+Esta API cuida do lado **preventivo** da jornada: cadastro de tutores e pets, **check-ins de sinais vitais com
+classificação automática de risco**, **linha do tempo clínica** (vacinas, exames, consultas) e **relatos de
+comportamento** do pet (dados IoB armazenados no MongoDB, usados pela triagem por IA).
 
-Veja a seção [🩺 Sprint 3 — Monitoramento, Observabilidade e Testes Automatizados](#-sprint-3--monitoramento-observabilidade-e-testes-automatizados) para todos os detalhes.
+## Integrantes — Turma 2TDSPO
 
----
-
-# 👥 Equipe (Turma 2TDSPO)
-- Pedro Henrique Luiz Alves Duarte - RM563405
-- Guilherme Macedo Martins - RM562396
-- Henrique Martins Oliveira - RM563620
+| Nome | RM |
+|---|---|
+| Guilherme Macedo Martins | RM562396 |
+| Pedro Henrique Luiz Alves Duarte | RM563405 |
+| Henrique Martins Oliveira | RM563620 |
 
 ---
 
-# 📖 Descrição do Projeto
-A API KuraVet serve como o núcleo de dados para um ecossistema que conecta clínicas veterinárias e tutores.
+## Atendimento à rubrica da Sprint 4
 
-## Objetivo
-Garantir que a saúde do animal seja monitorada constantemente, permitindo intervenções precoces baseadas em dados.
-
-## Diferencial
-Possui uma lógica de Simulação de IA no registro de Check-ins, que analisa parâmetros como o Tempo de Preenchimento Capilar (TPC) para classificar o nível de risco do pet automaticamente.
-
-## Persistência
-Utiliza banco de dados Oracle com Entity Framework Core, garantindo integridade e escalabilidade para grandes volumes de históricos clínicos.
+| Requisito | Onde está |
+|---|---|
+| Clean Architecture, SOLID, DI, exceções globais | [Arquitetura](#arquitetura) · [Tratamento de erros](#tratamento-de-erros) |
+| Swagger, paginação/ordenação/filtros, HATEOAS, JWT | [Endpoints](#endpoints) · [Paginação, ordenação, filtros e HATEOAS](#paginação-ordenação-filtros-e-hateoas) · [Autenticação e perfis](#autenticação-e-perfis) |
+| EF Core + migrations (Oracle), MongoDB, Repository | [Persistência](#persistência-oracle--mongodb) |
+| Health checks, logging estruturado, testes AAA, cobertura | [Monitoramento](#monitoramento-e-observabilidade) · [Testes e cobertura](#testes-e-cobertura) |
+| README, diagrama, endpoints documentados | Este arquivo · [`docs/arquitetura.png`](docs/arquitetura.png) · [`docs/openapi.json`](docs/openapi.json) |
 
 ---
 
-# 🛣️ Documentação das Rotas
-Abaixo estão os endpoints principais.
-Para detalhes técnicos de cada modelo (JSON), acesse a interface do Swagger ou Scalar.
+## Sumário
+
+1. [Arquitetura](#arquitetura)
+2. [Tecnologias](#tecnologias)
+3. [Estrutura do repositório](#estrutura-do-repositório)
+4. [Como executar](#como-executar)
+5. [Autenticação e perfis](#autenticação-e-perfis)
+6. [Endpoints](#endpoints)
+7. [Paginação, ordenação, filtros e HATEOAS](#paginação-ordenação-filtros-e-hateoas)
+8. [Tratamento de erros](#tratamento-de-erros)
+9. [Persistência (Oracle + MongoDB)](#persistência-oracle--mongodb)
+10. [Monitoramento e observabilidade](#monitoramento-e-observabilidade)
+11. [Testes e cobertura](#testes-e-cobertura)
 
 ---
 
-# 👤 Gestão de Tutores (`/api/Tutor`)
-| Método | Endpoint | Descrição |
+## Arquitetura
+
+A solução segue **Clean Architecture** com quatro projetos. As referências entre projetos sempre apontam para
+dentro: o `Domain` não conhece EF Core, ASP.NET nem MongoDB.
+
+![Diagrama de arquitetura](docs/arquitetura.png)
+
+```mermaid
+flowchart LR
+    Api[KuraVet.Api<br/>Controllers, JWT, HATEOAS,<br/>ProblemDetails, Swagger] --> App[KuraVet.Application<br/>Services, DTOs,<br/>interfaces de repositório]
+    App --> Dom[KuraVet.Domain<br/>Entidades e regras]
+    Infra[KuraVet.Infrastructure<br/>EF Core + Oracle, MongoDB,<br/>Repositórios, BCrypt, JWT] --> App
+    Api -. composição de DI .-> Infra
+    Infra --> Oracle[(Oracle FIAP)]
+    Infra --> Mongo[(MongoDB)]
+```
+
+| Projeto | Responsabilidade | Depende de |
 |---|---|---|
-| POST | `/api/Tutor` | Cadastra um novo tutor |
-| GET | `/api/Tutor` | Lista todos os tutores cadastrados |
-| GET | `/api/Tutor/{id}` | Busca detalhes de um tutor pelo ID |
-| PUT | `/api/Tutor/{id}` | Atualiza dados de um tutor existente |
-| DELETE | `/api/Tutor/{id}` | Remove um tutor pelo ID |
+| `KuraVet.Domain` | Entidades com invariantes (`Tutor`, `Pet`, `CheckinHistorico`, `EventoConsulta`, `Usuario`, `RelatoComportamento`), regra de risco (`CheckinRiscoService`) e `DomainException` | — |
+| `KuraVet.Application` | Casos de uso (services), DTOs de request/response, filtros de paginação/ordenação e interfaces (`IRepository<T>`, `IRelatoComportamentoRepository`, `ITokenService`, `IPasswordHasher`) | Domain |
+| `KuraVet.Infrastructure` | `KuraVetDbContext` (Oracle), configurações Fluent API, migrations, repositórios concretos, repositório MongoDB, BCrypt, geração de JWT e health checks dos bancos | Application |
+| `KuraVet.Api` | Controllers finos, `GlobalExceptionHandler`, HATEOAS, autenticação JWT, Swagger, health checks, Serilog e OpenTelemetry | Application, Infrastructure |
+
+### Decisões de design
+
+- **Controllers finos**: só recebem a requisição, chamam o service e adicionam links HATEOAS. Nenhum controller acessa o `DbContext`.
+- **SOLID**: cada service tem uma responsabilidade (SRP); os services dependem de abstrações (DIP), o que permite testá-los com Moq; repositórios específicos estendem `IRepository<T>` sem alterá-lo (OCP).
+- **DI organizada em extension methods**: `AddApplication()`, `AddInfrastructure(configuration)`, `AddApiPresentation()`, `AddJwtAuthentication()`, `AddSwaggerDocumentation()`, `AddObservability()`.
+- **Domain sem atributos de persistência**: o mapeamento das tabelas está em `IEntityTypeConfiguration<T>` (Fluent API) e o documento MongoDB tem uma classe própria (`RelatoComportamentoDocument`).
+- **Regra de risco preservada da Sprint 3**: TPC acima de 2 segundos → `Moderado`; caso contrário → `Baixo`. O risco é recalculado a cada atualização.
 
 ---
 
-# 🐾 Gestão de Pets (`/api/Pet`)
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/Pet` | Cadastra um pet vinculado a um Tutor |
-| GET | `/api/Pet` | Lista todos os pets cadastrados |
-| GET | `/api/Pet/{id}` | Retorna o perfil completo do Pet |
-| GET | `/api/Pet/tutor/{tutorId}` | Lista todos os pets de um tutor específico |
-| PUT | `/api/Pet/{id}` | Atualiza dados de um pet existente |
-| DELETE | `/api/Pet/{id}` | Remove um pet pelo ID |
+## Tecnologias
+
+.NET 8 · ASP.NET Core · EF Core 8 + Oracle (`Oracle.EntityFrameworkCore`) · MongoDB.Driver · JWT Bearer ·
+BCrypt.Net-Next · Swashbuckle (Swagger) · Serilog · OpenTelemetry · xUnit · Moq · WebApplicationFactory · coverlet.
 
 ---
 
-# 🩺 Check-ins de Sinais Vitais (`/api/Checkin`)
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/Checkin` | Registra sinais vitais (Respiração, TPC, Hidratação) |
-| GET | `/api/Checkin` | Lista todos os check-ins |
-| GET | `/api/Checkin/{id}` | Busca um check-in pelo ID |
-| GET | `/api/Checkin/pet/{petId}` | Histórico cronológico de saúde de um pet |
-| GET | `/api/Checkin/risco/{nivel}` | Filtra alertas por nível (Ex: "Moderado", "Baixo") |
-| PUT | `/api/Checkin/{id}` | Atualiza dados de um check-in |
-| DELETE | `/api/Checkin/{id}` | Remove um registro de histórico |
+## Estrutura do repositório
+
+```
+KuraVet.Api.sln
+├── KuraVet.Domain/                 Entidades, regras e exceções de domínio
+├── KuraVet.Application/            Services, DTOs, filtros e interfaces (portas)
+├── KuraVet.Infrastructure/
+│   ├── Persistence/                DbContext, Configurations (Fluent), Repositories, Migrations
+│   ├── Mongo/                      Documento, repositório e configurações do MongoDB
+│   ├── Security/                   JwtTokenService, BCryptPasswordHasher, JwtSettings
+│   └── HealthChecks/               Health checks do Oracle e do MongoDB
+├── KuraVet.Api/
+│   ├── Controllers/                Tutor, Pet, Checkin, EventoConsulta, RelatoComportamento, Auth
+│   ├── ExceptionHandling/          GlobalExceptionHandler (ProblemDetails)
+│   ├── Hateoas/                    Geração de links
+│   ├── Extensions/                 Registro de serviços e endpoints
+│   ├── HealthChecks/ Observability/ Middlewares/
+│   └── Program.cs
+├── KuraVet.Api.Tests.Unit/         Domain, Application e Infrastructure (xUnit + Moq + EF InMemory)
+├── KuraVet.Api.Tests.Integration/  API completa via WebApplicationFactory + JWT de teste
+├── docker-compose.yml              MongoDB local (com índices da coleção)
+├── coverage.runsettings            Cobertura focada em Domain e Application
+└── docs/                           Diagrama de arquitetura
+```
 
 ---
 
-# 🏥 Linha do Tempo Clínica (`/api/EventoConsulta`)
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/EventoConsulta` | Registra Vacinas, Exames ou Consultas |
-| GET | `/api/EventoConsulta` | Lista todos os eventos clínicos |
-| GET | `/api/EventoConsulta/{id}` | Busca um evento pelo ID |
-| GET | `/api/EventoConsulta/pet/{petId}` | Retorna a linha do tempo completa do pet |
-| PUT | `/api/EventoConsulta/{id}` | Atualiza um evento clínico existente |
-| DELETE | `/api/EventoConsulta/{id}` | Remove um evento clínico |
+## Como executar
 
----
+### Pré-requisitos
 
-# ⚙️ Instalação e Execução
+- .NET SDK 8
+- Acesso ao Oracle da FIAP (`oracle.fiap.com.br:1521/ORCL`)
+- MongoDB: Docker (`docker compose up -d`) **ou** um cluster gratuito no MongoDB Atlas
+- Ferramenta do EF: `dotnet tool install --global dotnet-ef --version 8.*`
 
-## Pré-requisitos
-- SDK .NET 8.0
-- Visual Studio 2022 (ou VS Code com C# Dev Kit)
-- Acesso a um banco de dados Oracle (Cloud ou Local)
+### 1. Configurar os segredos (nunca versionados)
 
----
+O `appsettings.json` contém apenas placeholders. Os valores reais ficam no **user-secrets** da máquina de cada
+integrante (ou em variáveis de ambiente):
 
-# 🚀 Passo a Passo
-
-## 1. Clonar o Repositório
 ```bash
-git clone https://github.com/KuraVet-Challenge-2026/advanced-business-dotnet.git
-cd KuraVet.Api
+dotnet user-secrets set "ConnectionStrings:OracleConnection" "User Id=<RM>;Password=<SENHA>;Data Source=oracle.fiap.com.br:1521/ORCL;" --project KuraVet.Api
+dotnet user-secrets set "MongoDb:ConnectionString" "mongodb://localhost:27017" --project KuraVet.Api
+dotnet user-secrets set "Jwt:Key" "<uma-chave-aleatoria-com-32-ou-mais-caracteres>" --project KuraVet.Api
+dotnet user-secrets set "Seed:Admin:Email" "<email-do-admin>" --project KuraVet.Api
+dotnet user-secrets set "Seed:Admin:Senha" "<senha-do-admin>" --project KuraVet.Api
+dotnet user-secrets list --project KuraVet.Api
 ```
 
-## 2. Configuração da String de Conexão
-No arquivo `appsettings.json`, ajuste a chave `OracleConnection` com suas credenciais:
-```json
-"ConnectionStrings": {
-  "OracleConnection": "Data Source=localhost:1521/XEPDB1;User Id=SEU_USER;Password=SUA_SENHA;"
-}
-```
+Equivalentes em variáveis de ambiente: `ConnectionStrings__OracleConnection`, `MongoDb__ConnectionString`,
+`Jwt__Key`, `Seed__Admin__Email`, `Seed__Admin__Senha`.
 
-## 3. Migração do Banco de Dados
-Execute as migrações para criar as tabelas automaticamente via Package Manager Console:
-```powershell
-Update-Database
-```
-Ou via CLI:
+> O user-secrets só é carregado no ambiente `Development` (padrão dos perfis `http`/`https`).
+> Sem `Jwt:Key` válida a API **não inicia** e informa o motivo no console.
+
+### 2. MongoDB
+
 ```bash
-dotnet ef database update
+docker compose up -d          # sobe o MongoDB 7 em localhost:27017 e cria os índices de relatos_comportamento
 ```
 
-## 4. Execução
-Inicie o projeto através do Visual Studio (F5) ou via terminal:
+Sem Docker (ex.: máquinas do laboratório), use o **MongoDB Atlas** (plano M0 gratuito): crie o cluster, um usuário
+de banco, libere o acesso em *Network Access* e grave a connection string `mongodb+srv://...` em
+`MongoDb:ConnectionString` via user-secrets. A coleção `relatos_comportamento` é criada na primeira inserção.
+
+### 3. Aplicar as migrations no Oracle
+
 ```bash
-dotnet run
+dotnet ef database update --project KuraVet.Infrastructure --startup-project KuraVet.Api
 ```
+
+Migrations existentes: `CriacaoTabelasKuraVet`, `AdicionaEventoConsulta` (Sprint 2/3) e `AdicionaUsuario` (Sprint 4).
+Para conferir se o modelo está sincronizado com as migrations:
+
+```bash
+dotnet ef migrations has-pending-model-changes --project KuraVet.Infrastructure --startup-project KuraVet.Api
+```
+
+### 4. Executar
+
+```bash
+dotnet run --project KuraVet.Api --launch-profile http
+```
+
+- Swagger: <http://localhost:5180/swagger>
+- Health check: <http://localhost:5180/health>
+- Na inicialização, o administrador configurado em `Seed:Admin` é criado (se ainda não existir).
+
+O arquivo `KuraVet.Api/KuraVet.Api.http` tem requisições prontas para o fluxo completo.
 
 ---
 
-# 📄 Documentação com Open API
+## Autenticação e perfis
 
-A API KuraVet possui documentação interativa completa configurada com **Swagger UI** e **Scalar**, ambas disponíveis assim que o projeto é iniciado.
+1. `POST /api/auth/login` com e-mail e senha → retorna `accessToken` (JWT, 60 min).
+2. Envie o token no header `Authorization: Bearer <token>` (no Swagger, botão **Authorize**).
+3. Senhas são armazenadas apenas como **hash BCrypt** (`TB_KV_USUARIO.SenhaHash`).
 
-## 🔗 Interfaces Disponíveis
-
-| Interface | URL | Descrição |
+| Perfil | Como é criado | Permissões |
 |---|---|---|
-| **Swagger UI** | `https://localhost:{porta}/swagger` | Interface clássica com formulários de teste integrados |
-| **Scalar** | `https://localhost:{porta}/scalar/v1` | Interface moderna com client HTTP integrado |
-| **OpenAPI JSON** | `https://localhost:{porta}/openapi/v1.json` | Especificação bruta em formato JSON |
+| `Tutor` | `POST /api/auth/register` (autocadastro) | Consultar e cadastrar/editar tutores, pets, check-ins e relatos |
+| `Veterinario` | Admin via `POST /api/auth/usuarios` | Tudo do Tutor + criar/editar eventos clínicos |
+| `Admin` | Seed na inicialização ou outro Admin | Tudo, incluindo exclusões e gestão de usuários |
+
+Health checks e login/registro são públicos; todas as demais rotas exigem token.
 
 ---
 
-## ✅ Swagger UI Configurado
+## Endpoints
 
-O Swagger está configurado com as seguintes funcionalidades:
+| Método | Rota | Descrição | Perfil |
+|---|---|---|---|
+| POST | `/api/auth/login` | Autentica e emite JWT | Público |
+| POST | `/api/auth/register` | Autocadastro (perfil Tutor) | Público |
+| GET | `/api/auth/me` | Usuário autenticado | Autenticado |
+| POST | `/api/auth/usuarios` | Cria usuário com perfil escolhido | Admin |
+| GET | `/api/auth/usuarios/{id}` | Obtém usuário | Admin |
+| GET | `/api/Tutor` | Lista tutores (paginado; filtro `nome`) | Autenticado |
+| GET | `/api/Tutor/{id}` | Obtém tutor | Autenticado |
+| POST | `/api/Tutor` | Cria tutor | Autenticado |
+| PUT | `/api/Tutor/{id}` | Atualiza tutor | Autenticado |
+| DELETE | `/api/Tutor/{id}` | Remove tutor (cascade nos pets) | Admin |
+| GET | `/api/Pet` | Lista pets (filtros `nome`, `tutorId`) | Autenticado |
+| GET | `/api/Pet/{id}` | Obtém pet | Autenticado |
+| GET | `/api/Pet/tutor/{tutorId}` | Pets de um tutor | Autenticado |
+| POST | `/api/Pet` | Cria pet | Autenticado |
+| PUT | `/api/Pet/{id}` | Atualiza pet | Autenticado |
+| DELETE | `/api/Pet/{id}` | Remove pet | Admin |
+| GET | `/api/Checkin` | Lista check-ins (filtros `petId`, `nivelRisco`, `dataInicio`, `dataFim`) | Autenticado |
+| GET | `/api/Checkin/{id}` | Obtém check-in | Autenticado |
+| GET | `/api/Checkin/pet/{petId}` | Histórico do pet (mais recentes primeiro) | Autenticado |
+| GET | `/api/Checkin/risco/{nivelRisco}` | Check-ins por risco (Baixo, Moderado, Grave) | Autenticado |
+| POST | `/api/Checkin` | Registra check-in e classifica o risco | Autenticado |
+| PUT | `/api/Checkin/{id}` | Atualiza e recalcula o risco | Autenticado |
+| DELETE | `/api/Checkin/{id}` | Remove check-in | Admin |
+| GET | `/api/EventoConsulta` | Lista eventos (filtros `petId`, `tipoEvento`, `veterinario`, datas) | Autenticado |
+| GET | `/api/EventoConsulta/{id}` | Obtém evento | Autenticado |
+| GET | `/api/EventoConsulta/pet/{petId}` | Linha do tempo clínica do pet | Autenticado |
+| POST | `/api/EventoConsulta` | Registra evento | Admin, Veterinario |
+| PUT | `/api/EventoConsulta/{id}` | Atualiza evento | Admin, Veterinario |
+| DELETE | `/api/EventoConsulta/{id}` | Remove evento | Admin |
+| GET | `/api/RelatoComportamento` | Lista relatos (filtros `petId`, `categoria`, `intensidadeMinima`, datas) | Autenticado |
+| GET | `/api/RelatoComportamento/{id}` | Obtém relato (ObjectId) | Autenticado |
+| POST | `/api/RelatoComportamento` | Registra relato (MongoDB) | Autenticado |
+| PUT | `/api/RelatoComportamento/{id}` | Atualiza relato | Autenticado |
+| DELETE | `/api/RelatoComportamento/{id}` | Remove relato | Admin |
+| GET | `/health`, `/health/live`, `/health/ready` | Health checks | Público |
 
-- `EnableAnnotations()` — habilita as anotações `[SwaggerOperation]` nos controllers
-- `IncludeXmlComments()` — inclui os comentários XML gerados automaticamente pelo build
-- `DisplayRequestDuration()` — exibe o tempo de resposta de cada requisição testada
-- `EnableFilter()` — campo de busca para encontrar endpoints rapidamente
-- `EnableTryItOutByDefault()` — formulário de teste já aberto por padrão, sem precisar clicar
-- `DefaultModelsExpandDepth(2)` — schemas dos models expandidos automaticamente
-
-O `OpenApiInfo` está configurado com título, versão, descrição, contato da equipe e licença MIT.
-
----
-
-## ✅ Scalar Configurado
-
-O Scalar oferece uma interface moderna com:
-
-- Tema **Purple**
-- Client padrão **C# HttpClient** (gera snippet de código automaticamente)
-- Integrado ao mesmo `openapi/v1.json` gerado pelo Swagger
-
----
-
-## 📋 Endpoints Documentados
-
-Todos os **20 endpoints** da API estão completamente documentados com:
-
-**Nos Controllers** — `[ProducesResponseType]`, `[SwaggerOperation]` e comentários XML:
-```csharp
-/// <summary>Registra um novo check-in de saúde.</summary>
-/// <param name="model">Sinais vitais do pet a serem registrados.</param>
-/// <returns>Check-in criado com o nível de risco calculado pela IA.</returns>
-[HttpPost]
-[SwaggerOperation(
-    Summary = "Registrar novo check-in",
-    Description = "Cadastra os sinais vitais e gera automaticamente o nível de risco via IA.",
-    OperationId = "CreateCheckin")]
-[ProducesResponseType(typeof(CheckinHistorico), StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<IActionResult> Post([FromBody] CheckinHistorico model) { ... }
-```
-
-**Nos Models** — `/// <summary>` e `/// <example>` em todos os campos:
-```csharp
-/// <summary>Tempo de preenchimento capilar em segundos. Valores acima de 2 indicam risco moderado.</summary>
-/// <example>1</example>
-[Required]
-public int TempoPreenchimentoCapilar { get; set; }
-```
-
-**Códigos de resposta documentados por endpoint:**
-
-| Controller | GET all | GET by id | GET filtro | POST | PUT | DELETE |
-|---|---|---|---|---|---|---|
-| Tutor | 200, 204, 400 | 200, 404, 400 | — | 201, 400 | 200, 404, 400 | 200, 404, 400 |
-| Pet | 200, 204, 400 | 200, 404, 400 | 200, 204, 400 | 201, 400 | 200, 404, 400 | 200, 404, 400 |
-| Checkin | 200, 204, 400 | 200, 404, 400 | 200, 204, 400 | 201, 400 | 200, 404, 400 | 200, 404, 400 |
-| EventoConsulta | 200, 204, 400 | 200, 404, 400 | 200, 204, 400 | 201, 400 | 200, 404, 400 | 200, 404, 400 |
+A especificação OpenAPI completa fica disponível em `/swagger/v1/swagger.json` com a API em execução
+(exportada em [`docs/openapi.json`](docs/openapi.json)).
 
 ---
 
-## 🧪 Testando pela Interface
+## Paginação, ordenação, filtros e HATEOAS
 
-**Via Swagger UI (`/swagger`):**
-1. Acesse `https://localhost:{porta}/swagger` no navegador
-2. Os endpoints estão organizados por grupo: **Tutores**, **Pets**, **Check-ins de Saúde**, **Eventos Clínicos**
-3. Clique em qualquer endpoint — o formulário "Try it out" já estará aberto
-4. Preencha os campos (os schemas com exemplos aparecem ao lado)
-5. Clique em **Execute** e veja a resposta real da API
+Todos os `GET` de listagem aceitam:
 
-**Via Scalar (`/scalar/v1`):**
-1. Acesse `https://localhost:{porta}/scalar/v1`
-2. Selecione o endpoint desejado no menu lateral
-3. Preencha os parâmetros e clique em **Send**
-4. O Scalar gera automaticamente o snippet de código C# equivalente
-
-**Exemplo de body para testar `POST /api/Checkin`:**
-```json
-{
-  "dataCheckin": "2026-05-21T10:30:00",
-  "frequenciaRespiratoria": 22,
-  "tempoPreenchimentoCapilar": 1,
-  "corMucosa": "Rosada",
-  "nivelHidratacao": "Normal",
-  "petId": 1
-}
-```
-> 💡 O campo `nivelRiscoIA` não precisa ser enviado — é calculado automaticamente pela API.
-
----
-
----
-
-# 🩺 Sprint 3 — Monitoramento, Observabilidade e Testes Automatizados
-
-Esta seção documenta o que foi adicionado na Sprint 3 (Advanced Business Development with .NET), em cima da API já existente. A entrega é **puramente local**: sem deploy na Azure e sem integração com serviços/interfaces externas.
-
-## 🩺 Health Checks
-
-A API expõe três endpoints de Health Check (`Microsoft.Extensions.Diagnostics.HealthChecks`), todos retornando um JSON detalhado com o status geral, a duração de cada checagem e dados adicionais:
-
-| Endpoint | Finalidade | Checagens incluídas |
+| Parâmetro | Padrão | Observação |
 |---|---|---|
-| `GET /health` | Visão geral completa | Banco Oracle + API + Memória |
-| `GET /health/live` | Liveness (a API está de pé?) | Apenas a checagem `api-self` |
-| `GET /health/ready` | Readiness (pronta para atender?) | Banco Oracle (`oracle-database`) + Memória (`system-resources`) |
+| `page` | 1 | Valores menores que 1 viram 1 |
+| `pageSize` | 10 | Máximo 100 |
+| `sortBy` | por recurso | Campo inválido retorna 400 com os valores aceitos |
+| `sortDir` | `asc` (check-ins, eventos e relatos: `desc`) | `asc` ou `desc` |
+| filtros | — | Específicos de cada recurso (tabela de endpoints) |
 
-Esses três endpoints **não exigem autenticação** (API Key), para permitir que ferramentas de monitoramento/orquestração os consultem livremente.
+Exemplo: `GET /api/Tutor?page=1&pageSize=2&sortBy=nome&sortDir=asc&nome=ana`
 
-Exemplo de resposta de `GET /health`:
 ```json
 {
-  "status": "Healthy",
-  "totalDurationMs": 12.4,
-  "checks": [
+  "items": [
     {
-      "name": "oracle-database",
-      "status": "Healthy",
-      "description": null,
-      "durationMs": 8.1,
-      "tags": [ "ready", "db" ],
-      "data": {}
-    },
-    {
-      "name": "api-self",
-      "status": "Healthy",
-      "description": "A API KuraVet está em execução e respondendo normalmente.",
-      "durationMs": 0.01,
-      "tags": [ "live" ],
-      "data": {}
-    },
-    {
-      "name": "system-resources",
-      "status": "Healthy",
-      "description": "Uso de memória dentro do esperado.",
-      "durationMs": 0.3,
-      "tags": [ "ready" ],
-      "data": { "memoriaAlocadaMB": 42.7 }
+      "id": 3,
+      "nome": "Ana Souza",
+      "links": [
+        { "rel": "self", "href": "http://localhost:5180/api/Tutor/3", "method": "GET" },
+        { "rel": "update", "href": "http://localhost:5180/api/Tutor/3", "method": "PUT" },
+        { "rel": "delete", "href": "http://localhost:5180/api/Tutor/3", "method": "DELETE" },
+        { "rel": "pets", "href": "http://localhost:5180/api/Pet/tutor/3", "method": "GET" }
+      ]
     }
+  ],
+  "page": 1,
+  "pageSize": 2,
+  "totalItems": 3,
+  "totalPages": 2,
+  "links": [
+    { "rel": "self", "href": "http://localhost:5180/api/Tutor?nome=ana&page=1&pageSize=2&sortBy=nome&sortDir=asc", "method": "GET" },
+    { "rel": "first", "href": "...page=1...", "method": "GET" },
+    { "rel": "last", "href": "...page=2...", "method": "GET" },
+    { "rel": "next", "href": "...page=2...", "method": "GET" }
   ]
 }
 ```
 
-> ℹ️ A checagem `system-resources` (uso de memória do processo) substitui, nesta entrega 100% local, uma verificação de "disponibilidade de serviços externos" — já que o projeto não integra com nenhum serviço de terceiros.
-
-## 📝 Logging Estruturado (Serilog)
-
-- Logs em `Information`, `Warning` (respostas de erro/"não encontrado") e `Error` (exceções), em todos os Controllers.
-- Saída simultânea em **Console** e em **arquivo** (`logs/kuravet-api-{data}.log`, rotação diária, mantendo os últimos 7 arquivos).
-- Cada requisição tem um `CorrelationId` (baseado no `TraceIdentifier` do ASP.NET Core) propagado nos logs e devolvido no header de resposta `X-Correlation-Id`, permitindo correlacionar uma mesma requisição entre as diferentes camadas da aplicação.
-- Configuração em `appsettings.json`, seção `"Serilog"`.
-
-## 📊 Tracing e Métricas (OpenTelemetry)
-
-- Tracing distribuído com `ActivitySource` próprio (`KuraVet.Api`) + instrumentação automática de ASP.NET Core e `HttpClient`.
-- Métricas customizadas expostas via `Meter` (`KuraVet.Api.Metrics`):
-  - `kuravet_api_requests_total` — total de requisições.
-  - `kuravet_api_requests_errors_total` — total de requisições com status ≥ 400 (taxa de erros).
-  - `kuravet_api_request_duration_ms` — tempo de resposta (ms).
-- Exportador **Console** (traces e métricas aparecem no terminal onde a API está rodando) — mantém a entrega 100% local, sem Azure Application Insights nem coletores externos.
-
-## 🔑 Autenticação (API Key)
-
-O projeto da Sprint 2 não possuía nenhum mecanismo de autenticação. Como a rubrica da Sprint 3 exige que os testes de integração cubram o fluxo de autenticação, foi adicionado um esquema simples e **100% local** (sem integração com nenhum provedor de identidade externo): todos os endpoints de `Tutor`, `Pet`, `Checkin` e `EventoConsulta` agora exigem o header `X-Api-Key`.
-
-- Chave padrão (ambiente de desenvolvimento): `kuravet-dev-key-2026` (configurável em `appsettings.json`, chave `Authentication:ApiKey`).
-- Sem o header ou com uma chave incorreta → `401 Unauthorized`.
-- Os endpoints de Health Check (`/health*`) **não** exigem essa chave.
-- No Swagger UI, clique em **Authorize** e informe a chave para testar os endpoints protegidos.
-
-## 🧪 Testes Automatizados
-
-A solução agora tem **três projetos**:
-
-```
-KuraVet.Api.sln
-├── KuraVet.Api                     (API)
-├── KuraVet.Api.Tests.Unit          (xUnit + Moq — Domínio e Aplicação)
-└── KuraVet.Api.Tests.Integration   (xUnit + WebApplicationFactory)
-```
-
-### Como rodar os testes
-
-```bash
-# Todos os testes (os dois projetos)
-dotnet test
-
-# Apenas os testes unitários
-dotnet test KuraVet.Api.Tests.Unit
-
-# Apenas os testes de integração
-dotnet test KuraVet.Api.Tests.Integration
-```
-
-Os testes de integração **não dependem do Oracle real**: o `CustomWebApplicationFactory` substitui o `KuraVetDbContext` pelo provider **InMemory** do EF Core, então `dotnet test` roda offline, sem nenhuma credencial de banco.
-
-### `KuraVet.Api.Tests.Unit`
-
-- **Domínio**: validação das Data Annotations de `Tutor`, `Pet`, `CheckinHistorico`, `EventoConsulta`, e testes de `CheckinRiscoService` (regra de classificação de risco, extraída do `CheckinController`).
-- **Aplicação** (Controllers): `TutorControllerTests`, `PetControllerTests`, `CheckinControllerTests`, `EventoConsultaControllerTests` — dependências mockadas com **Moq** (`ILogger`, e `ICheckinRiscoService` no caso do `CheckinController`), persistência com EF Core InMemory.
-- `PetControllerTests` usa `IClassFixture<SeedDataFixture>` para compartilhar uma base semeada entre os testes da classe.
-
-### `KuraVet.Api.Tests.Integration`
-
-- `CustomWebApplicationFactory : WebApplicationFactory<Program>` — troca o Oracle pelo InMemory e injeta uma API Key de teste.
-- `KuraVetApiCollection` (`ICollectionFixture`) compartilha essa mesma factory entre as classes de teste de endpoints, evitando subir a aplicação uma vez por classe.
-- Cobrem o fluxo HTTP completo: `AuthenticationTests` (401 sem chave / com chave errada / 200-204 com chave válida), `HealthCheckEndpointTests`, `TutorEndpointsTests`, `PetEndpointsTests`, `CheckinEndpointsTests` (inclui a classificação de risco de ponta a ponta) e `EventoConsultaEndpointsTests` — sempre cobrindo sucesso, 404 e 400 (validação).
-
-### Convenção de nomenclatura
-
-Todos os testes seguem `MetodoTestado_Cenario_ResultadoEsperado`, por exemplo:
-`Post_CheckinComTpcAcimaDeDois_DeveRetornarRiscoModerado`.
+Links relacionados por recurso: **pet** → `tutor`, `checkins`, `timeline`, `relatos`; **check-in**, **evento** e
+**relato** → `pet`; **tutor** → `pets`.
 
 ---
 
-# 🛠️ Tecnologias
-- ASP.NET Core 8.0
-- Entity Framework Core 8 (Oracle / InMemory nos testes)
-- Swagger UI / OpenAPI (`Swashbuckle.AspNetCore` 6.6.2)
-- Scalar (`Scalar.AspNetCore` 2.5.6)
-- Auto-análise de Risco (Simulação de IA) — `KuraVet.Api.Domain.CheckinRiscoService`
-- **Sprint 3:**
-  - `Microsoft.Extensions.Diagnostics.HealthChecks` + `...HealthChecks.EntityFrameworkCore` (Health Checks)
-  - `Serilog.AspNetCore`, `Serilog.Sinks.Console`, `Serilog.Sinks.File` (logging estruturado)
-  - `OpenTelemetry`, `OpenTelemetry.Instrumentation.AspNetCore/Http`, `OpenTelemetry.Exporter.Console` (tracing e métricas)
-  - Autenticação por API Key (esquema local, sem integração externa)
-  - `xUnit`, `Moq`, `Microsoft.AspNetCore.Mvc.Testing`, `Microsoft.EntityFrameworkCore.InMemory` (testes automatizados)
+## Tratamento de erros
+
+Um `IExceptionHandler` global converte todas as exceções em **ProblemDetails (RFC 7807)**:
+
+| Situação | Status |
+|---|---|
+| Validação de DTO (DataAnnotations), regra de domínio, `sortBy` inválido, referência inexistente | 400 |
+| Credenciais inválidas / sem token | 401 |
+| Perfil sem permissão | 403 |
+| Recurso não encontrado | 404 |
+| E-mail já cadastrado, violação de restrição do banco | 409 |
+| Erro inesperado (sem detalhes internos) | 500 |
+
+```json
+{
+  "type": "https://httpstatuses.io/404",
+  "title": "Recurso não encontrado",
+  "status": 404,
+  "detail": "Tutor '99' não encontrado(a).",
+  "instance": "/api/Tutor/99",
+  "traceId": "0HN7..."
+}
+```
+
+---
+
+## Persistência (Oracle + MongoDB)
+
+**Oracle (EF Core + migrations)** — tabelas `TB_KV_TUTOR`, `TB_KV_PET`, `TB_KV_CHECKIN_HISTORICO`,
+`TB_KV_EVENTO_CONSULTA` e `TB_KV_USUARIO`, com chaves estrangeiras em cascata e índice único em `Email`.
+O schema usado por esta API é diferente do schema do backend Java (os dois possuem tabelas de tutor e pet).
+
+**MongoDB** — coleção `relatos_comportamento`. Relatos de comportamento são textos livres com categoria,
+intensidade (1–5) e tags variáveis: um formato semiestruturado que muda com frequência e é lido em bloco pela
+triagem por IA, por isso faz mais sentido em um banco de documentos do que em tabelas relacionais.
+
+```json
+{
+  "_id": { "$oid": "652f1c2e9b1e8a0012345678" },
+  "petId": 1,
+  "categoria": "Alimentacao",
+  "descricao": "Comeu metade da ração e bebeu menos água que o normal.",
+  "intensidade": 3,
+  "tags": ["apetite", "agua"],
+  "dataRelato": { "$date": "2026-10-04T21:10:00Z" },
+  "registradoPor": "tutor@kuravet.com",
+  "criadoEm": { "$date": "2026-10-04T21:12:30Z" }
+}
+```
+
+**Padrão Repository** — `IRepository<T>` e interfaces específicas ficam na Application; as implementações
+(`TutorRepository`, `PetRepository`, `CheckinRepository`, `EventoConsultaRepository`, `UsuarioRepository` e
+`RelatoComportamentoRepository`) ficam na Infrastructure.
+
+---
+
+## Monitoramento e observabilidade
+
+| Recurso | Detalhes |
+|---|---|
+| Health checks | `/health` (todos), `/health/live` (processo), `/health/ready` (Oracle, MongoDB e memória). Oracle fora do ar → `Unhealthy`; MongoDB fora do ar → `Degraded` |
+| Logs estruturados | Serilog no console e em `logs/kuravet-api-AAAAMMDD.log`, com `CorrelationId` em todas as linhas |
+| Correlação | Header `X-Correlation-Id` em todas as respostas e `traceId` nos ProblemDetails |
+| Tracing e métricas | OpenTelemetry (ASP.NET Core, HttpClient e métricas próprias `kuravet_api_requests_total`, `kuravet_api_requests_errors_total`, `kuravet_api_request_duration_ms`) com exporter de console |
+
+---
+
+## Testes e cobertura
+
+```bash
+dotnet build
+dotnet test
+```
+
+- **Unitários** (`KuraVet.Api.Tests.Unit`): entidades e regra de risco (Domain), services com repositórios
+  mockados via Moq (Application), BCrypt, JWT e paginação do repositório com EF InMemory (Infrastructure).
+- **Integração** (`KuraVet.Api.Tests.Integration`): a API completa sobe com `WebApplicationFactory`, Oracle
+  trocado por EF InMemory e MongoDB por um repositório em memória. Os testes usam JWT real emitido pela própria
+  API e cobrem autenticação (401/403), CRUD, paginação, HATEOAS, ProblemDetails e health checks.
+  Nenhum banco externo é necessário para rodar `dotnet test`.
+- Padrão de nomes: `Metodo_Cenario_ResultadoEsperado`, estrutura AAA (Arrange, Act, Assert).
+
+### Cobertura (Domain + Application)
+
+```bash
+dotnet test --collect:"XPlat Code Coverage" --settings coverage.runsettings
+dotnet tool install --global dotnet-reportgenerator-globaltool
+reportgenerator -reports:"**/TestResults/**/coverage.cobertura.xml" -targetdir:"docs/coverage" -reporttypes:"TextSummary;Html"
+```
+
+| Camada | Cobertura de linhas | Cobertura de branches |
+|---|---|---|
+| KuraVet.Domain | {{COBERTURA_DOMAIN_LINHAS}} | {{COBERTURA_DOMAIN_BRANCHES}} |
+| KuraVet.Application | {{COBERTURA_APPLICATION_LINHAS}} | {{COBERTURA_APPLICATION_BRANCHES}} |
+
+Valores medidos em {{DATA_MEDICAO}} (`docs/coverage/Summary.txt`), com {{TOTAL_TESTES}} testes passando.
