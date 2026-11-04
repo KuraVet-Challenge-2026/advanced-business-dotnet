@@ -23,7 +23,7 @@ comportamento** do pet (dados IoB armazenados no MongoDB, usados pela triagem po
 | Swagger, paginação/ordenação/filtros, HATEOAS, JWT | [Endpoints](#endpoints) · [Paginação, ordenação, filtros e HATEOAS](#paginação-ordenação-filtros-e-hateoas) · [Autenticação e perfis](#autenticação-e-perfis) |
 | EF Core + migrations (Oracle), MongoDB, Repository | [Persistência](#persistência-oracle--mongodb) |
 | Health checks, logging estruturado, testes AAA, cobertura | [Monitoramento](#monitoramento-e-observabilidade) · [Testes e cobertura](#testes-e-cobertura) |
-| README, diagrama, endpoints documentados | Este arquivo · [`docs/arquitetura.png`](docs/arquitetura.png) · [`docs/openapi.json`](docs/openapi.json) |
+| README, diagrama, endpoints documentados | Este arquivo · [`KuraVet_Api_Sprint4/docs/arquitetura.png`](KuraVet_Api_Sprint4/docs/arquitetura.png) · [`KuraVet_Api_Sprint4/docs/openapi.json`](KuraVet_Api_Sprint4/docs/openapi.json) |
 
 ---
 
@@ -48,7 +48,7 @@ comportamento** do pet (dados IoB armazenados no MongoDB, usados pela triagem po
 A solução segue **Clean Architecture** com quatro projetos. As referências entre projetos sempre apontam para
 dentro: o `Domain` não conhece EF Core, ASP.NET nem MongoDB.
 
-![Diagrama de arquitetura](docs/arquitetura.png)
+![Diagrama de arquitetura](KuraVet_Api_Sprint4/docs/arquitetura.png)
 
 ```mermaid
 flowchart LR
@@ -87,7 +87,8 @@ BCrypt.Net-Next · Swashbuckle (Swagger) · Serilog · OpenTelemetry · xUnit ·
 ## Estrutura do repositório
 
 ```
-KuraVet.Api.sln
+KuraVet_Api_Sprint4/
+├── KuraVet.Api.sln
 ├── KuraVet.Domain/                 Entidades, regras e exceções de domínio
 ├── KuraVet.Application/            Services, DTOs, filtros e interfaces (portas)
 ├── KuraVet.Infrastructure/
@@ -119,6 +120,15 @@ KuraVet.Api.sln
 - Acesso ao Oracle da FIAP (`oracle.fiap.com.br:1521/ORCL`)
 - MongoDB: Docker (`docker compose up -d`) **ou** um cluster gratuito no MongoDB Atlas
 - Ferramenta do EF: `dotnet tool install --global dotnet-ef --version 8.*`
+
+### 0. Entrar na pasta da solução
+
+Todos os comandos abaixo são executados dentro de `KuraVet_Api_Sprint4/`, onde está o `KuraVet.Api.sln`:
+
+```bash
+git clone https://github.com/KuraVet-Challenge-2026/advanced-business-dotnet.git
+cd advanced-business-dotnet/KuraVet_Api_Sprint4
+```
 
 ### 1. Configurar os segredos (nunca versionados)
 
@@ -234,7 +244,7 @@ Health checks e login/registro são públicos; todas as demais rotas exigem toke
 | GET | `/health`, `/health/live`, `/health/ready` | Health checks | Público |
 
 A especificação OpenAPI completa fica disponível em `/swagger/v1/swagger.json` com a API em execução
-(exportada em [`docs/openapi.json`](docs/openapi.json)).
+(exportada em [`KuraVet_Api_Sprint4/docs/openapi.json`](KuraVet_Api_Sprint4/docs/openapi.json)).
 
 ---
 
